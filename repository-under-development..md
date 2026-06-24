@@ -1,26 +1,32 @@
 <p align="center">
-  <img src="https://media.giphy.com/media/3o7TKsQ8UQZ3u9HibS/giphy.gif" width="100%" />
+  <img src="https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif" width="100%" />
 </p>
 
+<br>
+
 <h1 align="center">
-  🛡️ REPOSITORY UNDER DEVELOPMENT
+  <span style="color:#00FF41;">REPOSITORY UNDER DEVELOPMENT</span>
 </h1>
 
 <p align="center">
-  ─────────────────────────────────────────────
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 </p>
 
 <p align="center">
-  ⚠️ This repository is currently in the development phase.<br><br>
-  🚀 New modules, detection systems, and SIEM components<br>
-  will be added progressively.<br><br>
-  🔐 Stay tuned for upcoming updates.
+⚠️ This repository is currently under active development.<br><br>
+
+🚀 New modules, detection systems, and SIEM components
+will be added progressively.<br><br>
+
+🔐 Structure and features are not final yet.
+
 </p>
 
 <p align="center">
-  ─────────────────────────────────────────────
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 </p>
 
 <p align="center">
-  <sub>⚡ Status: Active Development • Version: Unstable Build</sub>
+<sub>⚡ STATUS: ACTIVE DEVELOPMENT • BUILD: UNSTABLE</sub>
 </p>
+
