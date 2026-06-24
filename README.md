@@ -308,7 +308,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Rule contributions must include:
 MIT License © 2026 Aditya Vatsa — Built for the defender community.
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:00FF41,100:0D1117&height=160&section=footer&text=Made%20with%20❤️%20for%20the%20Defender%20Community&fontColor=FFFFFF&fontSize=18&animation=fadeIn" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:00FF41,100:0D1117&height=220&section=footer&text=Made%20with%20❤️%20for%20Defender%20Community&fontColor=FFFFFF&fontSize=20&fontAlignY=70" />
 </p>
 
 <p align="center">
