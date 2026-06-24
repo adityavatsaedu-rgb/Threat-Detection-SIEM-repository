@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Repository Status</title>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: black;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* Canvas background */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+/* Center panel */
+.panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid #00ff41;
+  padding: 40px 60px;
+  text-align: center;
+  background: rgba(0,0,0,0.7);
+  box-shadow: 0 0 25px #00ff41;
+  border-radius: 10px;
+}
+
+/* Text styles */
+h1 {
+  color: white;
+  font-size: 32px;
+  letter-spacing: 2px;
+}
+
+.highlight {
+  color: #00ff41;
+}
+
+p {
+  margin-top: 15px;
+  color: #ccc;
+  font-size: 16px;
+}
+</style>
+
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="panel">
+  <h1>REPOSITORY <span class="highlight">UNDER DEVELOPMENT</span></h1>
+  <p>
+    This repository is currently under active development.<br>
+    More files, features, and improvements will be added soon.
+  </p>
+</div>
+
+<script>
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+// Full screen
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Binary characters
+const letters = "01";
+const fontSize = 14;
+const columns = Math.floor(canvas.width / fontSize);
+
+// Drops array
+const drops = [];
+for (let i = 0; i < columns; i++) {
+  drops[i] = Math.random() * canvas.height;
+}
+
+function draw() {
+  // Black fade effect
+  ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#00ff41";
+  ctx.font = fontSize + "px monospace";
+
+  for (let i = 0; i < drops.length; i++) {
+    const text = letters.charAt(Math.floor(Math.random() * letters.length));
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    // Reset randomly
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+      drops[i] = 0;
+    }
+
+    drops[i]++;
+  }
+}
+
+// Animation loop
+setInterval(draw, 33);
+
+// Resize fix
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
