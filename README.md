@@ -305,12 +305,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Rule contributions must include:
 
 ## 📄 License
 
-MIT License © 2025 Aditya Vatsa — Built for the defender community.
+MIT License © 2026 Aditya Vatsa — Built for the defender community.
 
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:00FF41,100:0D1117&height=160&section=footer&text=Made%20with%20❤️%20for%20the%20Defender%20Community&fontColor=FFFFFF&fontSize=18&animation=fadeIn" />
 </p>
 
 <p align="center">
-  © 2025 Aditya Vatsa • Built for modern defenders
+  © 2026 Aditya Vatsa • Built for modern defenders
 </p>
