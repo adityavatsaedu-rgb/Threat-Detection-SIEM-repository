@@ -1,9 +1,9 @@
 version: "3.9"
 
 services:
-  # ── Elasticsearch ─────────────────────────────────────
+
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
     container_name: siem-elasticsearch
     environment:
       - discovery.type=single-node
@@ -14,14 +14,14 @@ services:
     ports:
       - "9200:9200"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
+    restart: unless-stopped
 
-  # ── Kibana ────────────────────────────────────────────
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.11.0
+    image: docker.elastic.co/kibana/kibana:8.15.0
     container_name: siem-kibana
     depends_on:
       elasticsearch:
@@ -30,26 +30,25 @@ services:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
       - "5601:5601"
+    restart: unless-stopped
 
-  # ── Logstash ──────────────────────────────────────────
   logstash:
-    image: docker.elastic.co/logstash/logstash:8.11.0
+    image: docker.elastic.co/logstash/logstash:8.15.0
     container_name: siem-logstash
     depends_on:
       elasticsearch:
         condition: service_healthy
     volumes:
-      - ./config/logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./config/logstash:/usr/share/logstash/pipeline:ro
     ports:
-      - "5044:5044"    # Beats input
-      - "9600:9600"    # Monitoring
+      - "5044:5044"
+    restart: unless-stopped
 
-  # ── Detection Engine ──────────────────────────────────
   detection-engine:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: siem-detection
+    container_name: siem-detection-engine
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -60,25 +59,22 @@ services:
     volumes:
       - ./rules:/app/rules:ro
       - ./config:/app/config:ro
-      - logs:/app/logs
     restart: unless-stopped
 
-  # ── Grafana ───────────────────────────────────────────
   grafana:
-    image: grafana/grafana:10.2.0
+    image: grafana/grafana:11.2.0
     container_name: siem-grafana
     depends_on:
       - elasticsearch
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_PASSWORD=changeme
       - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
       - grafanadata:/var/lib/grafana
-      - ./dashboards/grafana:/etc/grafana/provisioning/dashboards:ro
     ports:
       - "3000:3000"
+    restart: unless-stopped
 
 volumes:
   esdata:
   grafanadata:
-  logs:

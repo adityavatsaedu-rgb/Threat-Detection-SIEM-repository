@@ -1,0 +1,19 @@
+# ─── Runtime dependencies ───────────────────────────────
+# Core
+pyyaml>=6.0.2
+requests>=2.32.3
+
+# Parsing
+python-dateutil>=2.9.0
+
+# GeoIP enrichment (download GeoLite2 db from maxmind.com)
+maxminddb>=2.6.0
+
+# Elasticsearch / OpenSearch output
+elasticsearch>=8.15.0
+
+# Async high-throughput pipeline support
+aiohttp>=3.10.5
+
+# Structured logging (JSON format for SIEM ingestion)
+structlog>=24.4.0

@@ -1,0 +1,9 @@
+# Global owner
+* @adityavatsaedu-rgb
+
+# Detection rules — require rule review
+rules/sigma/ @adityavatsaedu-rgb
+rules/yara/  @adityavatsaedu-rgb
+
+# Core engine — require careful review
+detectors/   @adityavatsaedu-rgb

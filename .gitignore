@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.env
+*.env
+
+# Secrets — NEVER commit these
+config/config.yaml
+config/*.local.yaml
+secrets/
+*.pem
+*.key
+*.crt
+
+# Test & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+test-results.xml
+
+# Type checking & linting
+.mypy_cache/
+.ruff_cache/
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+logs/
+data/
+
+# SBOM & scan outputs
+sbom.*.json
+trivy*.sarif
+bandit.sarif
+
+# GeoIP databases (download separately from maxmind.com)
+*.mmdb

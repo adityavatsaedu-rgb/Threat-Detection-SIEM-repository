@@ -1,0 +1,53 @@
+# ─────────────────────────────────────────────────────────
+# Threat Detection SIEM — Configuration Template
+# Copy this file to config.yaml and fill in your values.
+# NEVER commit config.yaml — it contains secrets.
+# ─────────────────────────────────────────────────────────
+
+siem:
+  elasticsearch_url: "http://localhost:9200"
+  index_prefix: "threat-detection"
+  batch_size: 500
+  flush_interval_seconds: 5
+
+rules:
+  sigma_dir: "rules/sigma"
+  yara_dir: "rules/yara"
+  reload_on_change: true
+
+enrichment:
+  geoip:
+    enabled: true
+    city_db_path: "data/GeoLite2-City.mmdb"
+    asn_db_path: "data/GeoLite2-ASN.mmdb"
+  threat_intel:
+    cache_ttl_seconds: 3600
+    virustotal:
+      enabled: false
+      api_key: "YOUR_VT_API_KEY_HERE"
+    otx:
+      enabled: false
+      api_key: "YOUR_OTX_API_KEY_HERE"
+
+alerting:
+  dedup_window_seconds: 3600
+  rate_limit_per_minute: 120
+  slack:
+    enabled: false
+    webhook_url: "YOUR_SLACK_WEBHOOK_HERE"
+    channel: "#soc-alerts"
+  pagerduty:
+    enabled: false
+    routing_key: "YOUR_PD_ROUTING_KEY_HERE"
+  jira:
+    enabled: false
+    base_url: "https://yourcompany.atlassian.net"
+    email: "your@email.com"
+    api_token: "YOUR_JIRA_TOKEN_HERE"
+    project_key: "SEC"
+    issue_type: "Bug"
+
+logging:
+  level: "INFO"
+  format: "json"
+  output: "stdout"

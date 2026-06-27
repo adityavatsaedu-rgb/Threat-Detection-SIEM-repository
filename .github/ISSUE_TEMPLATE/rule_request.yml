@@ -1,0 +1,32 @@
+name: New detection rule request
+description: Request a new Sigma detection rule
+title: "[Rule Request]: "
+labels: ["rule-request"]
+body:
+  - type: input
+    id: technique
+    attributes:
+      label: MITRE ATT&CK technique
+      placeholder: "T1059.001"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What should be detected?
+    validations:
+      required: true
+  - type: textarea
+    id: log_sample
+    attributes:
+      label: Log sample (anonymized)
+      description: Paste a raw log line that should trigger the rule
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Expected severity
+      options: [critical, high, medium, low]
+    validations:
+      required: true
