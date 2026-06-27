@@ -1,0 +1,84 @@
+version: "3.9"
+
+services:
+  # ── Elasticsearch ─────────────────────────────────────
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: siem-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ── Kibana ────────────────────────────────────────────
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: siem-kibana
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+
+  # ── Logstash ──────────────────────────────────────────
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.0
+    container_name: siem-logstash
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    volumes:
+      - ./config/logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5044:5044"    # Beats input
+      - "9600:9600"    # Monitoring
+
+  # ── Detection Engine ──────────────────────────────────
+  detection-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: siem-detection
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - RULES_DIR=/app/rules/sigma
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./rules:/app/rules:ro
+      - ./config:/app/config:ro
+      - logs:/app/logs
+    restart: unless-stopped
+
+  # ── Grafana ───────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: siem-grafana
+    depends_on:
+      - elasticsearch
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafanadata:/var/lib/grafana
+      - ./dashboards/grafana:/etc/grafana/provisioning/dashboards:ro
+    ports:
+      - "3000:3000"
+
+volumes:
+  esdata:
+  grafanadata:
+  logs:
