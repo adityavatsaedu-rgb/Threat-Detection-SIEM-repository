@@ -1,316 +1,173 @@
-# 🛡️ Threat Detection & SIEM Framework
+# Threat Detection & SIEM Framework
 
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:00FF41,100:0D1117&height=220&section=header&text=Threat%20Detection%20Framework&fontSize=40&fontColor=FFFFFF&animation=fadeIn&fontAlignY=38&desc=SIEM%20|%20Log%20Analysis%20|%20Alerting%20|%20Threat%20Intelligence&descAlignY=58&descSize=16&descColor=A0A0A0" />
-</p>
+[![CI](https://github.com/adityavatsaedu-rgb/Threat-Detection-SIEM-repository/actions/workflows/ci.yml/badge.svg)](https://github.com/adityavatsaedu-rgb/Threat-Detection-SIEM-repository/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://python.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-0D1117)](LICENSE)
+[![Sigma](https://img.shields.io/badge/Sigma-Rules-FF6B35)](https://sigmahq.io)
+[![MITRE ATT&CK](https://img.shields.io/badge/MITRE%20ATT%26CK-Mapped-E63946)](https://attack.mitre.org)
+[![ECS](https://img.shields.io/badge/ECS-Compatible-005571?logo=elastic)](https://elastic.co/ecs)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Sigma_Rules-Enabled-FF6B35?style=for-the-badge&logo=elastic&logoColor=white"/>
-  <img src="https://img.shields.io/badge/MITRE_ATT%26CK-Mapped-E63946?style=for-the-badge&logo=target&logoColor=white"/>
-  <img src="https://img.shields.io/badge/YARA-Rules-7400B8?style=for-the-badge&logo=virustotal&logoColor=white"/>
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge"/>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Elastic-Compatible-005571?style=for-the-badge&logo=elastic&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Splunk-Compatible-65A637?style=for-the-badge&logo=splunk&logoColor=white"/>
-  <img src="https://img.shields.io/badge/OpenSearch-Compatible-003B57?style=for-the-badge&logo=opensearch&logoColor=white"/>
-</p>
+A production-grade, open-source threat detection and SIEM framework engineered for security operations teams. Ingests, normalizes, correlates, and alerts on adversary activity across enterprise log sources with full MITRE ATT&CK traceability.
 
 ---
 
-## 📋 Table of Contents
+## Architecture
 
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Detection Coverage](#detection-coverage)
-- [Components](#components)
-- [Quick Start](#quick-start)
-- [Detection Rules](#detection-rules)
-- [Log Parsers](#log-parsers)
-- [Alerting Pipeline](#alerting-pipeline)
-- [MITRE ATT&CK Coverage](#mitre-attck-coverage)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-
----
-
-## 🔍 Overview
-
-A production-grade, open-source **Threat Detection & SIEM Framework** designed for SOC teams. It provides:
-
-- **Multi-source log ingestion** with normalized schema (ECS-compatible)
-- **Sigma rule engine** with real-time and batch evaluation
-- **YARA-based file/memory scanning** integrated into the pipeline
-- **MITRE ATT&CK-mapped detections** across 15+ tactic categories
-- **Pluggable alerting** (Slack, PagerDuty, JIRA, Email, Webhook)
-- **Threat intelligence enrichment** via MISP, OTX, VirusTotal
-- **Dashboards** for Kibana, Grafana, and Splunk
-
----
-
-## 🏗️ Architecture
-
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                        LOG SOURCES                               │
-│  Windows Events │ Linux Syslog │ AWS CloudTrail │ Firewall/IDS  │
-└────────────────────────────┬─────────────────────────────────────┘
-                             │
-                    ┌────────▼────────┐
-                    │  Log Ingestion  │  (Filebeat / Fluentd / API)
-                    │   & Parsing     │
-                    └────────┬────────┘
-                             │ Normalized ECS Events
-                    ┌────────▼────────┐
-                    │   Enrichment    │  (GeoIP, TI Feeds, WHOIS)
-                    │    Engine       │
-                    └────────┬────────┘
-                             │
-              ┌──────────────▼──────────────┐
-              │      Detection Engine        │
-              │  ┌──────────┐ ┌──────────┐  │
-              │  │  Sigma   │ │   YARA   │  │
-              │  │  Rules   │ │  Rules   │  │
-              │  └──────────┘ └──────────┘  │
-              │  ┌──────────┐ ┌──────────┐  │
-              │  │ Snort/   │ │ Anomaly  │  │
-              │  │  Suric.  │ │ Baseline │  │
-              │  └──────────┘ └──────────┘  │
-              └──────────────┬──────────────┘
-                             │ Alerts
-                    ┌────────▼────────┐
-                    │    Alerting     │  (Slack / PagerDuty / JIRA)
-                    │    Pipeline     │
-                    └────────┬────────┘
-                             │
-                    ┌────────▼────────┐
-                    │   Dashboards    │  (Kibana / Grafana / Splunk)
-                    └─────────────────┘
+```text
++-------------------------------------------------------------+
+|                        LOG SOURCES                          |
+|    Windows Events | Linux Syslog | AWS CloudTrail | IDS     |
++---------------------------+---------------------------------+
+                            |
+                   +--------v--------+
+                   |  Log Ingestion  |  Filebeat / Fluentd / API
+                   |  and Parsing    |  ECS Normalization
+                   +--------+--------+
+                            |
+                   +--------v--------+
+                   |   Enrichment    |  GeoIP / Threat Intel
+                   +--------+--------+
+                            |
+             +--------------v--------------+
+             |       Detection Engine       |
+             |   Sigma Rules | YARA Rules   |
+             |   Snort Rules | Anomaly      |
+             +--------------+--------------+
+                            |
+                   +--------v--------+
+                   |  Alert Pipeline |  Slack / PagerDuty / JIRA
+                   +--------+--------+
+                            |
+                   +--------v--------+
+                   |   Dashboards    |  Kibana / Grafana / Splunk
+                   +-----------------+
 ```
 
 ---
 
-## 🎯 Detection Coverage
+## Detection Coverage
 
-| Category | Rules | MITRE Techniques |
-|---|---|---|
-| Credential Access | 18 | T1003, T1110, T1555, T1212 |
-| Lateral Movement | 14 | T1021, T1076, T1091, T1534 |
-| Execution | 22 | T1059, T1106, T1204, T1569 |
-| Persistence | 16 | T1053, T1098, T1136, T1543 |
-| Defense Evasion | 20 | T1070, T1112, T1218, T1562 |
-| Exfiltration | 12 | T1041, T1048, T1052, T1567 |
-| Command & Control | 15 | T1071, T1095, T1105, T1571 |
-| Discovery | 10 | T1016, T1018, T1057, T1082 |
-| **Total** | **127** | **50+ techniques** |
-
----
-
-## 🧩 Components
-
-```
-threat-detection-siem/
-├── detectors/                  # Core detection engine
-│   ├── sigma_engine.py         # Sigma rule evaluator
-│   ├── yara_scanner.py         # YARA rule scanner
-│   ├── anomaly_detector.py     # Statistical anomaly detection
-│   └── correlation_engine.py   # Multi-event correlation
-├── rules/
-│   ├── sigma/                  # Sigma detection rules (.yml)
-│   │   ├── windows/
-│   │   ├── linux/
-│   │   ├── cloud/
-│   │   └── network/
-│   ├── yara/                   # YARA rules (.yar)
-│   └── snort/                  # Snort/Suricata rules (.rules)
-├── parsers/
-│   ├── windows_event_parser.py
-│   ├── syslog_parser.py
-│   ├── cloudtrail_parser.py
-│   └── firewall_parser.py
-├── enrichment/
-│   ├── geoip_enricher.py
-│   ├── threat_intel.py         # MISP, OTX, VT integration
-│   └── asset_context.py
-├── alerting/
-│   ├── alert_manager.py
-│   ├── slack_notifier.py
-│   ├── pagerduty_notifier.py
-│   └── jira_notifier.py
-├── dashboards/
-│   ├── kibana/
-│   ├── grafana/
-│   └── splunk/
-├── scripts/
-│   ├── ingest_logs.py
-│   ├── tune_rules.py
-│   └── generate_report.py
-├── tests/
-├── docs/
-└── .github/workflows/
-```
+| Tactic               | Rules   | Techniques                 |
+|----------------------|---------|----------------------------|
+| Credential Access    | 18      | T1003, T1110, T1555, T1212 |
+| Execution            | 22      | T1059, T1106, T1204, T1569 |
+| Persistence          | 16      | T1053, T1098, T1136, T1543 |
+| Lateral Movement     | 14      | T1021, T1076, T1091, T1534 |
+| Defense Evasion      | 20      | T1070, T1112, T1218, T1562 |
+| Privilege Escalation | 10      | T1055, T1068, T1098, T1134 |
+| Exfiltration         | 12      | T1041, T1048, T1052, T1567 |
+| Command and Control  | 15      | T1071, T1095, T1105, T1571 |
+| Total                | 127     | 50+ techniques             |
 
 ---
 
-## 🚀 Quick Start
+## Repository Structure
 
-### Prerequisites
+```text
+.
++-- detectors/
+|   +-- sigma_engine.py         Sigma rule evaluator
+|   +-- yara_scanner.py         YARA file and memory scanner
+|   +-- anomaly_detector.py     Statistical baseline detection
+|   +-- correlation_engine.py   Multi-event correlation
++-- parsers/
+|   +-- evtx_parser.py          Windows Event Log (EVTX)
+|   +-- syslog_parser.py        Linux auth/syslog/auditd
+|   +-- cloudtrail_parser.py    AWS CloudTrail
+|   +-- firewall_parser.py      Palo Alto, Cisco ASA, Fortinet
++-- enrichment/
+|   +-- threat_intel.py         OTX, VirusTotal, MISP
+|   +-- geoip_enricher.py       MaxMind GeoIP2
+|   +-- asset_context.py        Asset criticality mapping
++-- alerting/
+|   +-- alert_manager.py        Slack, PagerDuty, JIRA, Email
++-- correlations/               Multi-event correlation rules
++-- rules/
+|   +-- sigma/
+|   |   +-- windows/            credential_access, execution,
+|   |   |                       lateral_movement, persistence,
+|   |   |                       defense_evasion, discovery
+|   |   +-- linux/              execution, persistence
+|   |   +-- cloud/aws/          IAM, CloudTrail detections
+|   |   +-- network/            c2, exfiltration
+|   +-- yara/                   YARA rules
+|   +-- snort/                  Snort/Suricata rules
++-- tests/
+|   +-- unit/                   Unit tests per module
+|   +-- integration/            End-to-end pipeline tests
+|   +-- fixtures/               Raw log samples (anonymized)
+|   +-- rule_samples/           Per-rule trigger events
++-- dashboards/
+|   +-- kibana/                 Kibana saved objects
+|   +-- grafana/                Grafana provisioning JSON
+|   +-- splunk/                 Splunk saved searches
++-- scripts/
+|   +-- ingest_logs.py          CLI log ingestion entry point
+|   +-- generate_report.py      MITRE coverage report generator
++-- config/
+|   +-- config.example.yaml     Configuration template
++-- docs/                       Architecture and playbooks
++-- k8s/                        Kubernetes manifests
++-- docker-compose.yml          Local ELK and Grafana stack
++-- Dockerfile                  Detection engine container
++-- Makefile                    Developer workflow commands
++-- pyproject.toml              Tool configuration
++-- requirements.txt            Runtime dependencies
++-- requirements-dev.txt        Development dependencies
+```
+
+---
+
+## Quick Start
+
+Prerequisites: Python 3.11+, Docker, Docker Compose
 
 ```bash
-python >= 3.11
-docker & docker-compose
-```
-
-### 1. Clone & Install
-
-```bash
-git clone https://github.com/YOUR_USERNAME/threat-detection-siem.git
-cd threat-detection-siem
+git clone https://github.com/adityavatsaedu-rgb/Threat-Detection-SIEM-repository.git
+cd Threat-Detection-SIEM-repository
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 2. Configure
-
-```bash
 cp config/config.example.yaml config/config.yaml
-# Edit config.yaml with your SIEM endpoint, TI API keys, alert destinations
-```
-
-### 3. Run Detection Engine
-
-```bash
-# Real-time mode (tail logs)
-python -m detectors.sigma_engine --mode realtime --source /var/log/
-
-# Batch mode (analyze log archive)
-python -m detectors.sigma_engine --mode batch --input logs/archive.jsonl
-
-# With enrichment
-python -m detectors.sigma_engine --mode realtime --enrich geoip,threatintel
-```
-
-### 4. Docker Stack
-
-```bash
+python scripts/ingest_logs.py --source windows --input logs/security.jsonl
 docker-compose up -d
-# Kibana: http://localhost:5601
-# Grafana: http://localhost:3000
 ```
 
----
-
-## 📜 Detection Rules
-
-Rules follow the **Sigma** specification and are organized by platform and MITRE tactic.
-
-Example — Brute Force Detection:
-```yaml
-# rules/sigma/windows/credential_access/brute_force_rdp.yml
-title: RDP Brute Force Attack
-id: a3f1b2c4-...
-status: stable
-description: Detects multiple failed RDP authentication attempts from a single source
-references:
-  - https://attack.mitre.org/techniques/T1110/
-tags:
-  - attack.credential_access
-  - attack.t1110.001
-logsource:
-  product: windows
-  service: security
-detection:
-  selection:
-    EventID: 4625
-    LogonType: 10
-  timeframe: 5m
-  condition: selection | count(TargetUserName) by IpAddress > 10
-falsepositives:
-  - Legitimate admin automation
-level: high
-```
-
-See [`rules/sigma/`](rules/sigma/) for all 127 rules.
+Kibana: http://localhost:5601
+Grafana: http://localhost:3000
+Elasticsearch: http://localhost:9200
 
 ---
 
-## 🔎 Log Parsers
+## Alerting Pipeline
 
-All parsers normalize to **Elastic Common Schema (ECS)** for cross-platform compatibility.
-
-Supported sources:
-- Windows Security/System/Application Event Logs (EVTX)
-- Linux syslog, auditd, auth.log
-- AWS CloudTrail, GuardDuty, VPC Flow Logs
-- Azure AD Sign-in Logs, Activity Logs
-- Palo Alto, Cisco ASA, Fortinet firewall logs
-- Zeek/Bro network logs
+| Severity | SLA        | Destinations             |
+|----------|------------|--------------------------|
+| Critical | Immediate  | PagerDuty + Slack + JIRA |
+| High     | < 15 min   | Slack + JIRA             |
+| Medium   | < 1 hour   | Slack                    |
+| Low      | Daily      | Email digest             |
 
 ---
 
-## 🔔 Alerting Pipeline
-
-Alerts are routed based on severity and rule tags:
-
-| Severity | SLA | Destinations |
-|---|---|---|
-| Critical | Immediate | PagerDuty + Slack + JIRA |
-| High | < 15 min | Slack + JIRA |
-| Medium | < 1 hour | Slack |
-| Low | Daily digest | Email |
-
----
-
-## 🗺️ MITRE ATT&CK Coverage
-
-![MITRE ATT&CK Navigator](docs/images/attack_navigator.png)
-
-Navigator layer file: [`docs/attack_navigator_layer.json`](docs/attack_navigator_layer.json)
-
----
-
-## 🚢 Deployment
-
-### Production (Docker Compose)
+## Development
 
 ```bash
-docker-compose -f docker-compose.prod.yml up -d
-```
-
-### Kubernetes
-
-```bash
-kubectl apply -f k8s/
-```
-
-### Standalone
-
-```bash
-python scripts/ingest_logs.py --config config/config.yaml
+make install          # Install all dependencies
+make test             # Run test suite with coverage
+make lint             # ruff + mypy + bandit
+make validate-rules   # Validate all Sigma and YARA rules
+make docker           # Build container image
+make report           # Generate MITRE ATT&CK coverage report
 ```
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Rule contributions must include:
-- MITRE ATT&CK technique mapping
-- Log sample triggering the rule
-- False positive documentation
-- Sigma validation: `sigma check rules/sigma/your_rule.yml`
+See [CONTRIBUTING.md](CONTRIBUTING.md). All rule contributions require a MITRE ATT&CK technique mapping, a raw log sample, and documented false positives.
 
 ---
 
-## 📄 License
+## License
 
-MIT License © 2026 Aditya Vatsa — Built for the defender community.
-
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:00FF41,100:0D1117&height=220&section=footer&text=Made%20with%20❤️%20for%20Defender%20Community&fontColor=FFFFFF&fontSize=20&fontAlignY=70" />
-</p>
-
-<p align="center">
-  © 2026 Aditya Vatsa • Built for modern defenders
-</p>
+MIT License — Copyright 2025 Aditya Vatsa

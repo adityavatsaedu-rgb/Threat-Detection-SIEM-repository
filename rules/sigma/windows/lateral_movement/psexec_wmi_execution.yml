@@ -1,0 +1,38 @@
+title: Lateral Movement via PsExec or WMI Remote Execution
+id: c8d3e4f5-0g2b-5f3c-9d5e-3g4f6h7i8j9k
+status: stable
+description: |
+  Detects lateral movement via PsExec service instantiation or WMI remote
+  execution. Both vectors are extensively leveraged by ransomware operators
+  and nation-state actors.
+references:
+  - https://attack.mitre.org/techniques/T1021/002/
+  - https://attack.mitre.org/techniques/T1047/
+author: Aditya Vatsa
+date: 2024-03-10
+modified: 2024-11-01
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+  - attack.t1047
+logsource:
+  product: windows
+  service: system
+detection:
+  selection_psexec:
+    EventID: 7045
+    ServiceName|contains: 'PSEXESVC'
+  selection_wmi:
+    EventID: 4688
+    NewProcessName|endswith: '\WmiPrvSE.exe'
+    CommandLine|contains:
+      - 'cmd.exe'
+      - 'powershell.exe'
+  condition: selection_psexec or selection_wmi
+falsepositives:
+  - Authorized remote administration by IT operations
+level: high
+fields:
+  - ServiceName
+  - CommandLine
+  - NewProcessName

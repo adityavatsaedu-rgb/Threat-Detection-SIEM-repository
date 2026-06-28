@@ -1,0 +1,44 @@
+title: PowerShell Encoded Command Execution
+id: b7c2d3e4-9f1a-4e2b-8c4d-2f3e5g6h7i8j
+status: stable
+description: |
+  Detects PowerShell invocation with Base64-encoded command arguments,
+  a primary obfuscation technique used by threat actors to evade
+  command-line auditing and EDR telemetry.
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+author: Aditya Vatsa
+date: 2024-02-01
+modified: 2024-11-01
+tags:
+  - attack.execution
+  - attack.defense_evasion
+  - attack.t1059.001
+  - attack.t1027
+logsource:
+  product: windows
+  service: security
+detection:
+  selection_process:
+    EventID: 4688
+    NewProcessName|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+  selection_encoded:
+    CommandLine|contains:
+      - ' -enc '
+      - ' -EncodedCommand '
+  selection_suspicious:
+    CommandLine|contains:
+      - 'downloadstring'
+      - 'iex'
+      - 'invoke-expression'
+      - 'frombase64string'
+  condition: selection_process and (selection_encoded or selection_suspicious)
+falsepositives:
+  - Legitimate software deployment pipelines
+level: high
+fields:
+  - CommandLine
+  - NewProcessName
+  - ParentProcessName

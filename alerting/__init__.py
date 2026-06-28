@@ -1,4 +1,1 @@
-"""
-Threat Detection SIEM — Alerting package.
-Multi-channel alert routing: Slack, PagerDuty, JIRA, Email.
-"""
+"""Alerting — Multi-channel routing: Slack, PagerDuty, JIRA, Email."""

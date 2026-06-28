@@ -1,0 +1,36 @@
+title: Suspicious Scheduled Task Creation
+id: d9e4f5g6-1h3c-6g4d-0e6f-4h5g7i8j9k0l
+status: stable
+description: |
+  Detects scheduled task creation referencing user-writable paths or
+  LOLBin executables. Primary persistence mechanism across all major
+  threat actor categories.
+references:
+  - https://attack.mitre.org/techniques/T1053/005/
+author: Aditya Vatsa
+date: 2024-04-01
+modified: 2024-11-01
+tags:
+  - attack.persistence
+  - attack.t1053.005
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4688
+    NewProcessName|endswith: '\schtasks.exe'
+    CommandLine|contains: '/create'
+  selection_suspicious:
+    CommandLine|contains:
+      - 'AppData'
+      - 'Temp'
+      - 'powershell'
+      - 'rundll32'
+  condition: selection and selection_suspicious
+falsepositives:
+  - Legitimate software installers
+level: medium
+fields:
+  - CommandLine
+  - SubjectUserName

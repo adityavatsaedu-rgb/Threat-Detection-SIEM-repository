@@ -1,14 +1,7 @@
-# ─────────────────────────────────────────────────────────
-# Threat Detection SIEM — Configuration Template
-# Copy this file to config.yaml and fill in your values.
-# NEVER commit config.yaml — it contains secrets.
-# ─────────────────────────────────────────────────────────
-
 siem:
   elasticsearch_url: "http://localhost:9200"
   index_prefix: "threat-detection"
   batch_size: 500
-  flush_interval_seconds: 5
 
 rules:
   sigma_dir: "rules/sigma"
@@ -19,7 +12,6 @@ enrichment:
   geoip:
     enabled: true
     city_db_path: "data/GeoLite2-City.mmdb"
-    asn_db_path: "data/GeoLite2-ASN.mmdb"
   threat_intel:
     cache_ttl_seconds: 3600
     virustotal:
@@ -45,9 +37,7 @@ alerting:
     email: "your@email.com"
     api_token: "YOUR_JIRA_TOKEN_HERE"
     project_key: "SEC"
-    issue_type: "Bug"
 
 logging:
   level: "INFO"
   format: "json"
-  output: "stdout"

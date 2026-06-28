@@ -1,0 +1,31 @@
+title: RDP Brute Force Authentication Attack
+id: a3f1b2c4-8d2e-4f1a-9b3c-1e2d4f5a6b7c
+status: stable
+description: |
+  Detects multiple consecutive failed RDP authentication attempts from a
+  single source IP within a compressed time window. Characteristic of
+  automated credential stuffing or brute-force tooling targeting port 3389.
+references:
+  - https://attack.mitre.org/techniques/T1110/001/
+author: Aditya Vatsa
+date: 2024-01-15
+modified: 2024-11-01
+tags:
+  - attack.credential_access
+  - attack.t1110.001
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4625
+    LogonType: 10
+  timeframe: 5m
+  condition: selection | count(TargetUserName) by IpAddress > 10
+falsepositives:
+  - Misconfigured automation or monitoring tooling
+level: high
+fields:
+  - IpAddress
+  - TargetUserName
+  - LogonType
