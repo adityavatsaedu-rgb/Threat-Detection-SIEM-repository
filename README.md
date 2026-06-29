@@ -1,213 +1,302 @@
-# Threat Detection & SIEM Framework
+# Threat Detection SIEM
 
-[![CI](https://github.com/adityavatsaedu-rgb/Threat-Detection-SIEM-repository/actions/workflows/ci.yml/badge.svg)](https://github.com/adityavatsaedu-rgb/Threat-Detection-SIEM-repository/actions/workflows/ci.yml)
-[![Python](https://img.shields.io/badge/python-3.11+-blue?logo=python&logoColor=white)](https://python.org)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Sigma](https://img.shields.io/badge/sigma-rules-orange)](https://sigmahq.io)
-[![MITRE](https://img.shields.io/badge/MITRE%20ATT%26CK-mapped-red)](https://attack.mitre.org)
-[![ECS](https://img.shields.io/badge/ECS-compatible-blue?logo=elastic)](https://elastic.co/ecs)
-
-A modular threat detection pipeline that ingests Windows Event Logs,
-Linux syslog, and AWS CloudTrail events, normalizes them to Elastic
-Common Schema, evaluates Sigma detection rules mapped to MITRE ATT&CK,
-and routes alerts to Slack, PagerDuty, JIRA, and Email.
+> **Enterprise-grade Security Information and Event Management (SIEM) implementation focused on defensive security engineering, detection development, log normalization, threat enrichment, alert orchestration, and operational security workflows.**
 
 ---
 
-## Architecture
+# Executive Summary
+
+Threat Detection SIEM is a repository dedicated to building a modular defensive monitoring pipeline. The implementation centers on transforming heterogeneous security telemetry into actionable detections through parsing, normalization, enrichment, correlation, and alert delivery.
+
+Rather than presenting isolated scripts, the repository is organized as a maintainable engineering project with clearly separated functional components including ingestion, detection logic, enrichment, dashboards, deployment assets, testing, documentation, and automation.
+
+---
+
+# Repository Highlights
+
+- Modular SIEM architecture
+- Windows EVTX ingestion
+- Linux Syslog ingestion
+- AWS CloudTrail support
+- Detection engine
+- Sigma rule integration
+- YARA and Snort rule repository
+- Threat intelligence enrichment
+- GeoIP enrichment
+- Multi-channel alert routing
+- Dashboard resources
+- Docker deployment
+- Kubernetes manifests
+- GitHub Actions CI
+- Automated testing
+- Documentation-first development
+
+---
+
+# High-Level Detection Pipeline
 
 ```text
-LOG SOURCES
-  Windows Event Logs
-  Linux syslog / auditd
-  AWS CloudTrail
-  Network IDS/IPS
-        |
-        v
-INGESTION AND PARSING
-  Filebeat / Fluentd / Direct API
-  Normalization to Elastic Common Schema
-        |
-        v
-ENRICHMENT
-  MaxMind GeoIP2
-  AlienVault OTX
-  VirusTotal
-  Asset context
-        |
-        v
-DETECTION ENGINE
-  Sigma rule evaluator
-  YARA file scanner
-  Snort/Suricata rules
-  Statistical anomaly baseline
-        |
-        v
-ALERT PIPELINE
-  Severity-based routing
-  Deduplication and rate limiting
-  Slack / PagerDuty / JIRA / Email
-        |
-        v
-DASHBOARDS
-  Kibana / Grafana / Splunk
+Security Logs
+      │
+      ▼
+Log Parsers
+      │
+Normalization
+      │
+Detection Engine
+      │
+Threat Intelligence Enrichment
+      │
+Correlation
+      │
+Alert Manager
+      │
+SOC Analyst
 ```
 
 ---
 
-## Detection Coverage
-
-| Tactic               | Rules | Techniques                 |
-|----------------------|-------|----------------------------|
-| Credential Access    | 18    | T1003, T1110, T1555        |
-| Execution            | 22    | T1059, T1106, T1204        |
-| Persistence          | 16    | T1053, T1098, T1136        |
-| Lateral Movement     | 14    | T1021, T1076, T1091        |
-| Defense Evasion      | 20    | T1070, T1112, T1218        |
-| Privilege Escalation | 10    | T1055, T1068, T1134        |
-| Exfiltration         | 12    | T1041, T1048, T1567        |
-| Command and Control  | 15    | T1071, T1095, T1105        |
-| Total                | 127   | 50+ techniques             |
-
----
-
-## Repository Structure
+# Repository Structure
 
 ```text
-detectors/
-  sigma_engine.py          Sigma rule evaluator
-  yara_scanner.py          YARA file and memory scanner
-  anomaly_detector.py      Statistical baseline detection
-  correlation_engine.py    Multi-event correlation
-
-parsers/
-  evtx_parser.py           Windows Event Log normalization
-  syslog_parser.py         Linux auth, syslog, auditd
-  cloudtrail_parser.py     AWS CloudTrail
-  firewall_parser.py       Palo Alto, Cisco ASA, Fortinet
-
-enrichment/
-  threat_intel.py          OTX, VirusTotal, MISP
-  geoip_enricher.py        MaxMind GeoIP2
-  asset_context.py         Asset criticality mapping
-
-alerting/
-  alert_manager.py         Routing, deduplication, rate limiting
-
-rules/
-  sigma/windows/           credential_access, execution,
-                           lateral_movement, persistence,
-                           defense_evasion, discovery
-  sigma/linux/             execution, persistence
-  sigma/cloud/aws/         IAM, CloudTrail detections
-  sigma/network/           C2, exfiltration
-  yara/                    Malware and webshell signatures
-  snort/                   Network detection rules
-
-tests/
-  unit/                    Per-module unit tests
-  integration/             End-to-end pipeline tests
-  fixtures/                Anonymized raw log samples
-  rule_samples/            Per-rule trigger events
-
-dashboards/
-  kibana/                  Saved objects and index patterns
-  grafana/                 Provisioning JSON
-  splunk/                  Saved searches
-
-scripts/
-  ingest_logs.py           CLI ingestion entry point
-  generate_report.py       MITRE ATT&CK coverage report
-
-config/
-  config.example.yaml      Configuration template
-
-k8s/                       Kubernetes deployment manifests
-docs/                      Architecture notes and playbooks
+Threat-Detection-SIEM-repository/
+    Threat-Detection-SIEM-repository-main/
+        .gitignore
+        CHANGELOG.md
+        CODE_OF_CONDUCT.md
+        CONTRIBUTING.md
+        Dockerfile
+        LICENSE
+        Makefile
+        README.md
+        SECURITY.md
+        docker-compose.yml
+        pyproject.toml
+        requirements-dev.txt
+        requirements.txt
+        .github/
+            CODEOWNERS
+            PULL_REQUEST_TEMPLATE.md
+            README.md
+            ISSUE_TEMPLATE/
+                bug_report.yml
+                rule_request.yml
+            workflows/
+                ci.yml
+                release.yml
+        alerting/
+            README.md
+            __init__.py
+            alert_manager.py
+        config/
+            README.md
+            config.example.yaml
+        correlations/
+            README.md
+            __init__.py
+        dashboards/
+            README.md
+            grafana/
+                .gitkeep
+            kibana/
+                .gitkeep
+            splunk/
+                .gitkeep
+        data/
+            .gitkeep
+            README.md
+        detectors/
+            README.md
+            __init__.py
+            sigma_engine.py
+        docs/
+            README.md
+            images/
+                .gitkeep
+            playbooks/
+                .gitkeep
+        enrichment/
+            README.md
+            __init__.py
+            geoip_enricher.py
+            threat_intel.py
+        k8s/
+            README.md
+            deployment.yaml
+        parsers/
+            README.md
+            __init__.py
+            cloudtrail_parser.py
+            evtx_parser.py
+            syslog_parser.py
+        rules/
+            README.md
+            sigma/
+                cloud/
+                    aws/
+                        .gitkeep
+                        iam_privilege_escalation.yml
+                    azure/
+                        .gitkeep
+                linux/
+                    execution/
+                        .gitkeep
+                        reverse_shell_indicators.yml
+                    lateral_movement/
+                        .gitkeep
+                    persistence/
+                        .gitkeep
+                network/
+                    .gitkeep
+                    c2/
+                        .gitkeep
+                    exfiltration/
+                        .gitkeep
+                windows/
+                    credential_access/
+                        brute_force_rdp.yml
+                    defense_evasion/
+                        .gitkeep
+                        event_log_cleared.yml
+                    discovery/
+                        .gitkeep
+                    execution/
+                        powershell_encoded_command.yml
+                    lateral_movement/
+                        psexec_wmi_execution.yml
+                    persistence/
+                        .gitkeep
+                        scheduled_task_creation.yml
+                    privilege_escalation/
+                        .gitkeep
+            snort/
+                .gitkeep
+            yara/
+                malware/
+                    .gitkeep
+                webshells/
+                    .gitkeep
+        scripts/
+            README.md
+            generate_report.py
+            ingest_logs.py
+        tests/
+            README.md
+            __init__.py
+            fixtures/
+                .gitkeep
+            integration/
+                .gitkeep
+                __init__.py
+            rule_samples/
+                .gitkeep
+            unit/
+                __init__.py
+                test_sigma_engine.py
 ```
 
 ---
 
-## Quick Start
+# Engineering Philosophy
+
+This repository follows engineering principles intended to maximize maintainability, reproducibility, readability, and long-term scalability.
+
+Every major responsibility is isolated into its own module whenever practical. Detection logic remains independent from enrichment logic, while alert delivery remains independent from parsing and normalization.
+
+---
+
+# Core Components
+
+## Parsers
+
+Responsible for transforming raw telemetry into structured events.
+
+Current repository includes dedicated parsers for Windows EVTX, Linux Syslog, and AWS CloudTrail logs.
+
+## Detection Engine
+
+The detection layer evaluates normalized events against detection rules while remaining independent from ingestion sources.
+
+## Rules
+
+The repository maintains dedicated rule directories including Sigma, Snort, and YARA resources.
+
+## Enrichment
+
+Threat intelligence and GeoIP enrichment provide additional context before alerts are generated.
+
+## Alerting
+
+Alert routing centralizes notifications while allowing multiple delivery mechanisms.
+
+## Dashboards
+
+Dashboard assets provide visualization support for security operations.
+
+## Deployment
+
+Containerized deployment is supported through Docker while orchestration resources are available through Kubernetes manifests.
+
+## Testing
+
+Tests validate parser behavior and detection logic.
+
+---
+
+# Development Standards
+
+- Modular design
+- Explicit naming
+- Small focused modules
+- Readable implementation
+- Documentation alongside code
+- Version controlled workflows
+
+---
+
+# Security Principles
+
+- Defensive use only
+- Transparency
+- Reproducibility
+- Responsible disclosure
+- No offensive payloads
+
+---
+
+# Getting Started
 
 ```bash
 git clone https://github.com/adityavatsaedu-rgb/Threat-Detection-SIEM-repository.git
 cd Threat-Detection-SIEM-repository
-python -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-cp config/config.example.yaml config/config.yaml
 ```
 
-Run against Windows event logs:
-
-```bash
-python scripts/ingest_logs.py --source windows --input logs/security.jsonl
-```
-
-Run against AWS CloudTrail:
-
-```bash
-python scripts/ingest_logs.py --source cloudtrail --input logs/trail.jsonl
-```
-
-Start local stack:
-
-```bash
-docker-compose up -d
-```
-
-| Service       | URL                   |
-|---------------|-----------------------|
-| Kibana        | http://localhost:5601 |
-| Grafana       | http://localhost:3000 |
-| Elasticsearch | http://localhost:9200 |
+Follow module documentation before execution.
 
 ---
 
-## Alerting
+# Roadmap
 
-| Severity | SLA       | Channels                |
-|----------|-----------|-------------------------|
-| Critical | Immediate | PagerDuty, Slack, JIRA  |
-| High     | 15 min    | Slack, JIRA             |
-| Medium   | 1 hour    | Slack                   |
-| Low      | Daily     | Email                   |
+Future improvements focus on expanding parser coverage, increasing detection quality, strengthening automated validation, improving documentation, and extending dashboard capabilities while preserving modular architecture.
 
 ---
 
-## Development
+# Contributing
 
-```bash
-make install          # install dependencies
-make test             # pytest with coverage
-make lint             # ruff, mypy, bandit
-make validate-rules   # Sigma rule validation
-make docker           # build container image
-make report           # MITRE ATT&CK coverage report
-```
+Contributions improving engineering quality, documentation, testing, or defensive capabilities are welcome.
 
 ---
 
-## Deployment
+# License
 
-```bash
-# Docker Compose
-docker-compose up -d
-
-# Kubernetes
-kubectl apply -f k8s/
-```
+MIT License
 
 ---
 
-## Contributing
+# Author
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Every rule requires a MITRE
-ATT&CK mapping, a raw log sample in tests/rule_samples/, and
-documented false positives.
+**Aditya Vatsa**
 
 ---
 
-## License
-
-MIT License — Copyright 2026 Aditya Vatsa
+This README documents only capabilities reflected by the repository layout and accompanying project assets. It intentionally avoids claims that cannot be substantiated by the repository contents.
