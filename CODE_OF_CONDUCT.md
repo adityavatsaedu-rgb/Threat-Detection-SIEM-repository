@@ -1,27 +1,29 @@
 # Code of Conduct
 
-## Our pledge
-
-We pledge to make participation in this project a harassment-free
-experience for everyone, regardless of age, body size, disability,
-ethnicity, gender identity, level of experience, nationality,
-personal appearance, race, religion, or sexual identity.
-
-## Our standards
+## Standards
 
 Positive behavior includes:
 - Using welcoming and inclusive language
 - Accepting constructive criticism gracefully
 - Focusing on what is best for the community
+- Showing empathy toward other contributors
 
 Unacceptable behavior includes:
 - Harassment of any kind
-- Publishing others' private information without permission
+- Publishing others private information without permission
 - Trolling or insulting comments
+- Personal or political attacks
 
 ## Enforcement
 
-Instances of unacceptable behavior may be reported by opening a
-private issue or contacting the maintainers directly.
+Maintainers have the right to remove, edit, or reject contributions
+that violate this Code of Conduct. Repeated violations may result
+in a permanent ban from the project.
 
-This Code of Conduct is adapted from the Contributor Covenant v2.1.
+## Scope
+
+This Code of Conduct applies within all project spaces including
+GitHub issues, pull requests, discussions, and external forums
+where the project is represented.
+
+Adapted from the Contributor Covenant v2.1.
