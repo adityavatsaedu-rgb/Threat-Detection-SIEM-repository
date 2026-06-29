@@ -1,1 +1,1 @@
-# Dashboard configurations — Kibana, Grafana, Splunk
+# Dashboards — Kibana, Grafana, Splunk configurations
