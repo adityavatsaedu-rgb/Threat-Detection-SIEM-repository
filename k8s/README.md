@@ -1,1 +1,1 @@
-# Kubernetes deployment manifests
+# Kubernetes — deployment and service manifests
