@@ -1,1 +1,1 @@
-# Operational scripts
+# Scripts — log ingestion and coverage reporting
