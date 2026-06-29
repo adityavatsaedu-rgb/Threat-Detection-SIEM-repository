@@ -1,1 +1,1 @@
-# Test suite
+# Tests — unit, integration, fixtures, rule samples
