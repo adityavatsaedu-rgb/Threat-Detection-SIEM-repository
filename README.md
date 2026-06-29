@@ -7,7 +7,7 @@
 [![MITRE](https://img.shields.io/badge/MITRE%20ATT%26CK-mapped-red)](https://attack.mitre.org)
 [![ECS](https://img.shields.io/badge/ECS-compatible-blue?logo=elastic)](https://elastic.co/ecs)
 
-Production-grade threat detection and SIEM framework for security operations teams. Built around the Sigma rule specification with full MITRE ATT&CK traceability, multi-source log normalization to Elastic Common Schema, and a pluggable real-time alerting pipeline.
+A modular threat detection pipeline that ingests Windows Event Logs, Linux syslog, and AWS CloudTrail events, normalizes them to Elastic Common Schema, evaluates Sigma-based detection rules mapped to MITRE ATT&CK, and routes alerts to Slack, PagerDuty, JIRA, and Email.
 
 ---
 
