@@ -1,27 +1,24 @@
 # Changelog
 
-All notable changes to this project are documented here.
-Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+All notable changes are documented here.
+Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
-## [Unreleased]
+## [1.0.0] — 2026-06-29
 
 ### Added
-- Full Sigma rule evaluation engine with wildcard and modifier support
-- Windows EVTX parser normalizing to Elastic Common Schema (ECS)
-- Linux syslog parser covering SSH and sudo events
-- AWS CloudTrail parser with high-risk API detection
+- Sigma rule evaluation engine with wildcard and modifier support
+- Windows EVTX parser normalized to Elastic Common Schema
+- Linux syslog parser covering SSH brute force and sudo abuse
+- AWS CloudTrail parser with high-risk API surface detection
 - Threat intelligence enrichment via AlienVault OTX and VirusTotal
 - GeoIP enrichment using MaxMind GeoLite2
 - Multi-channel alerting: Slack, PagerDuty, JIRA, Email
 - Alert deduplication and rate limiting
 - Docker Compose stack: Elasticsearch 8.15, Kibana, Logstash, Grafana 11
-- Kubernetes deployment manifest with security context
+- Kubernetes deployment manifest with hardened security context
 - GitHub Actions CI: lint, test, Sigma validation, Trivy scan, SBOM
-- 3 production Sigma rules: RDP brute force, PowerShell obfuscation, PsExec/WMI
-- Coverage report generator script
-- Complete test suite with 20+ unit tests
-
-## [0.1.0] — 2026-01-01
-
-### Added
-- Initial project structure
+- Detection rules: RDP brute force, PowerShell obfuscation,
+  PsExec lateral movement, scheduled task persistence,
+  event log tampering, Linux reverse shell, AWS IAM escalation
+- MITRE ATT&CK coverage report generator
+- Full test suite with unit and integration coverage
