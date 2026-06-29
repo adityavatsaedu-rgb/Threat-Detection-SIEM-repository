@@ -1,1 +1,1 @@
-# Documentation
+# Documentation — architecture and operational playbooks
