@@ -21,7 +21,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Coverage report generator script
 - Complete test suite with 20+ unit tests
 
-## [0.1.0] — 2025-01-01
+## [0.1.0] — 2026-01-01
 
 ### Added
 - Initial project structure
